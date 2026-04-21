@@ -1,0 +1,10 @@
+TEAM_ID=
+
+// live | staging — passed to Gradle as -Pkmp.environment (see "Compile Kotlin Framework" script)
+KMP_ENVIRONMENT = live
+
+PRODUCT_NAME=KmpTest
+PRODUCT_BUNDLE_IDENTIFIER=com.appswallet.kmptest.KmpTest$(TEAM_ID)
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0
