@@ -1,0 +1,6 @@
+// Production — Gradle builds the Kotlin framework with -Pkmp.environment=production (see "Compile Kotlin Framework" script)
+#include "Config.xcconfig"
+KMP_ENVIRONMENT = production
+
+// Custom Xcode configuration name is not "Debug" — embedAndSignAppleFrameworkForXcode needs this (debug or release)
+KOTLIN_FRAMEWORK_BUILD_TYPE = debug

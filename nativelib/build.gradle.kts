@@ -40,6 +40,14 @@ android {
                 }
             }
         }
+        create("production") {
+            dimension = "environment"
+            externalNativeBuild {
+                cmake {
+                    cppFlags("-DPRODUCTION=1")
+                }
+            }
+        }
     }
 
     buildTypes {

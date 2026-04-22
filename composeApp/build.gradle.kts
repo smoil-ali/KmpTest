@@ -12,10 +12,10 @@ plugins {
     alias(libs.plugins.sqlDelight)
 }
 
-/** iOS / Kotlin Native: pass `-Pkmp.environment=staging` (default `live`). Matches Android `staging` flavor URLs. */
 val kmpEnvironment: String =
     when (findProperty("kmp.environment")?.toString()?.lowercase()?.trim()) {
         "staging" -> "staging"
+        "production" -> "production"
         else -> "live"
     }
 
@@ -65,7 +65,7 @@ kotlin {
             cinterops.register("nativelibIos") {
                 definitionFile.set(nativelibDef)
                 compilerOpts(
-                    "-I${rootProject.layout.projectDirectory.dir("nativeCommon").asFile.absolutePath}",
+                    "-I${rootProject.layout.projectDirectory.dir("AliMain").asFile.absolutePath}",
                 )
             }
         }
@@ -152,6 +152,9 @@ android {
         create("staging") {
             dimension = "environment"
         }
+        create("production"){
+            dimension = "environment"
+        }
     }
     packaging {
         resources {
@@ -177,7 +180,9 @@ dependencies {
 val iosNativelibStagingFlag: String =
     if (kmpEnvironment == "staging") {
         "-DSTAGING=1 "
-    } else {
+    } else if (kmpEnvironment == "production") {
+        "-DPRODUCTION=1 "
+    } else{
         ""
     }
 
@@ -195,13 +200,13 @@ tasks.register<Exec>("compileNativelibIosDevice") {
             "SDK=${'$'}(xcrun --sdk iphoneos --show-sdk-path) && " +
             "xcrun --sdk iphoneos clang++ -arch arm64 -std=c++17 -isysroot \"${'$'}SDK\" " +
             iosNativelibStagingFlag +
-            " -c ../nativeCommon/kmp_native_urls.cpp " +
+            " -c ../AliMain/kmp_native_urls.cpp " +
             "-o build/native/libs/$kmpEnvironment/iosArm64/nativelib_ios.o && " +
             "xcrun --sdk iphoneos ar rcs build/native/libs/$kmpEnvironment/iosArm64/libnativelib_ios.a " +
             "build/native/libs/$kmpEnvironment/iosArm64/nativelib_ios.o",
     )
-    inputs.file(rootProject.layout.projectDirectory.file("nativeCommon/kmp_native_urls.cpp"))
-    inputs.file(rootProject.layout.projectDirectory.file("nativeCommon/kmp_native_urls.h"))
+    inputs.file(rootProject.layout.projectDirectory.file("AliMain/kmp_native_urls.cpp"))
+    inputs.file(rootProject.layout.projectDirectory.file("AliMain/kmp_native_urls.h"))
     outputs.file(layout.buildDirectory.file("native/libs/$kmpEnvironment/iosArm64/libnativelib_ios.a"))
 }
 
@@ -219,13 +224,13 @@ tasks.register<Exec>("compileNativelibIosSimulator") {
             "SDK=${'$'}(xcrun --sdk iphonesimulator --show-sdk-path) && " +
             "xcrun --sdk iphonesimulator clang++ -arch arm64 -std=c++17 -isysroot \"${'$'}SDK\" " +
             iosNativelibStagingFlag +
-            " -c ../nativeCommon/kmp_native_urls.cpp " +
+            " -c ../AliMain/kmp_native_urls.cpp " +
             "-o build/native/libs/$kmpEnvironment/iosSimulatorArm64/nativelib_ios.o && " +
             "xcrun --sdk iphonesimulator ar rcs build/native/libs/$kmpEnvironment/iosSimulatorArm64/libnativelib_ios.a " +
             "build/native/libs/$kmpEnvironment/iosSimulatorArm64/nativelib_ios.o",
     )
-    inputs.file(rootProject.layout.projectDirectory.file("nativeCommon/kmp_native_urls.cpp"))
-    inputs.file(rootProject.layout.projectDirectory.file("nativeCommon/kmp_native_urls.h"))
+    inputs.file(rootProject.layout.projectDirectory.file("AliMain/kmp_native_urls.cpp"))
+    inputs.file(rootProject.layout.projectDirectory.file("AliMain/kmp_native_urls.h"))
     outputs.file(layout.buildDirectory.file("native/libs/$kmpEnvironment/iosSimulatorArm64/libnativelib_ios.a"))
 }
 

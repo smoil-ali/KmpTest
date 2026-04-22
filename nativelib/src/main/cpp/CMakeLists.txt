@@ -26,7 +26,7 @@ project("nativelib")
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # Shared with iOS (composeApp); single place for base URLs — repo root nativeCommon/
-        ../../../../nativeCommon/kmp_native_urls.cpp)
+        ../../../../AliMain/kmp_native_urls.cpp)
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
